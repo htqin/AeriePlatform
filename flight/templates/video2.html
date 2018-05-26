@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+        .time-horizontal {
+            list-style-type: none;
+            border-top: 1px solid #00FFFF;
+            max-width: 1300px;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        .time-horizontal li {
+            float: left;
+            position: relative;
+            text-align: center;
+            width: 14%;
+            padding-top: 10px;
+        }
+
+        .time-horizontal li b:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 47%;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #C4E1FF;
+            border-radius: 8px;
+            background: #C4E1FF;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/default.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
+    <link rel='stylesheet' href='/static/css/jquery-ui.css'>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=XSsKYtZh1B9xnfggH0HdPsph9kCGW3er"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+    <script type="text/javascript"  src="/static/js/wordcloud2.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/Chart.js"></script>
+    <script type="text/javascript" src="/static/js/City.js"></script>
+    <script type="text/javascript" src="/static/js/common.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Aerie - 航空情报分析平台</title>
+
+</head>
+<body>
+
+    <div id="wrapper">
+        <h1>Aerie - 航空情报分析平台</h1>
+        <h2><strong> --  鹰巢  --</strong><sub>Focus on the indicators</sub><b class="logoline"></b><b class="logoline1"></b><b class="logoline2"></b><b class="logoline3"></b><b class="logoline4"></b></h2>
+        <!--时间区-->
+        <div class="date-timer">
+           <p>
+               <strong id="H"></strong>
+               <strong>:</strong>
+               <strong id="M"></strong>
+               <strong id="S" class="hide"></strong>
+           </p>
+           <em id="D"></em>
+            <ul>
+                <li id="Y"></li>
+                <li id="MH"></li>
+                <li id="TD"></li>
+            </ul>
+        </div>
+        <div class="big-index-1">
+            <ul>
+                <li>
+                    <b class="animation-1"></b><b class="animation-2"></b><b class="animation-3"></b>
+                    <p>监视飞行器数目</p>
+                    <strong>48107</strong>
+                </li>
+                <li>
+                    <b class="animation-1"></b><b class="animation-2"></b><b class="animation-3"></b>
+                    <p>热点(Country)</p>
+                    <strong> U . S . A . </strong>
+                </li>
+                <li>
+                    <b class="animation-1"></b><b class="animation-2"></b><b class="animation-3"></b>
+                    <p>热点(Province)</p>
+                    <strong> C . A . </strong>
+                </li>
+                <li>
+                    <b class="animation-1"></b><b class="animation-2"></b><b class="animation-3"></b>
+                    <p>热点(City)</p>
+                    <strong> L . A .</strong>
+                </li>
+                <li>
+                    <b class="animation-1"></b><b class="animation-2"></b><b class="animation-3"></b>
+                    <p>热点时段</p>
+                    <strong>2016.07</strong>
+                </li>
+                <li>
+                    <b class="animation-1"></b><b class="animation-2"></b><b class="animation-3"></b>
+                    <p>常用航空器</p>
+                    <strong>DA40</strong>
+                </li>
+            </ul>
+        </div>
+        <div class="submenu">
+            <ul>
+                <li><a href="#this" id = "LoadHeatMap">         <b>1</b><span>地区热力图<em></em></span></a> </li>
+                <li><a href="#this" id = "LoadHeightMapLow">    <b>2</b><span>街景飞行器<em></em></span></a> </li>
+                <li><a href="#this" id = "LoadHeightMapMid">    <b>3</b><span>监视飞行器<em></em></span></a></li>
+                <li><a href="#this" id = "LoadHeightMapHig">    <b>4</b><span>高空飞行器<em></em></span></a></li>
+                <li><a href="/index" id = "LoadVideo">           <b>5</b><span>俯 视 影 像<em></em></span></a></li>
+                <li><a href="/index" id = "LoadVideo">           <b>6</b><span>返 回<em></em></span></a></li>
+                <li><a href="#this" id = "MarkCity">            <b>7</b><span>热 点 标 注<em></em></span></a></li>
+                <li><a href="/index" id = "LoadVideo" class="active">           <b>8</b><span>返 回<em></em></span></a></li>
+                <li><a href="#this" id = "CleanMap">            <b>0</b><span>标 记 清 空<em></em></span></a></li>
+            </ul>
+        </div>
+
+        <div class="center-area">
+            <div id="mapid" style="width: 950px; height: 500px;">
+                <div id="canvas-container" align="center">
+                    <canvas id="canvas" width="900px" height="350px"></canvas>
+                </div>
+            </div>
+
+        </div>
+        <div class="right-area">
+            <h3>监控数据分析 <b></b></h3>
+            <div class="area-inbox-1">
+                <dl>
+                    <dt>监控热度百分比</dt>
+                    <dd class="font12"><span>76.52%</span><b></b></dd>
+                    <dt class="ml-20">热点监控城市</dt>
+                    <dd class="font-red ml-20"><span>L . A . </span><b></b></dd>
+                    <dt>舆情热度百分比</dt>
+                    <dd><span>68.13%</span><b></b></dd>
+                </dl>
+                <div class="round-1"></div>
+                <div class="round-2"></div>
+                <div class="round-3">A.I.</div>
+                <div class="round-4"></div>
+            </div>
+            <div class="area-inbox-2">
+                <ul>
+                    <li><strong>12</strong>74.23%<b></b><em></em></li>
+                    <li><strong>16</strong>71.19%<b></b><em></em></li>
+                    <li><strong>18</strong>68.02%<b></b><em></em></li>
+                </ul>
+                <div class="area-text">
+                    <b class="animation-line1"></b>
+                    <h4>航空数据分析平台</h4>
+                    <p class="text_container">
+                        <script>var s = '分析航空数据，   展示热点区域，    高效联合应用，    支持精准决策。       '; var con = $('.text_container'); var index = 0; var length = s.length; var tId = null; function start(){ con.text(''); tId=setInterval(function(){ con.append(s.charAt(index)); if(index++ === length){ clearInterval(tId); index = 0; start() } },100); } start();</script>
+                    </p>
+                    <b class="animation-line2"></b>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+<script>
+
+    var options = eval({
+        "list": [
+            ['#suspect',6],
+            ['#Los Angeles',6],
+            ['#shooting',7],
+            ['#12-year-old',5],
+            ['#IranElection', 4],
+            ['#dontyouhate', 3],
+            ['#Europe', 6],
+            ['#L.A.', 4],
+            ['@brytay82', 3],
+            ['#Kevin Jonas', 3],
+            ['#aprilyim', 3],
+            ['#chesterday', 3],
+            ['#dollhouse', 3],
+            ['#familyforce5', 4],
+            ['@AugInBethany', 3],
+            ['@amanda baybeee',3]
+        ],
+        "gridSize": 16, // size of the grid in pixels
+        "weightFactor": 10, // number to multiply for size of each word in the list
+        "fontWeight": 'normal', // 'normal', 'bold' or a callback
+        "fontFamily": 'Times, serif', // font to use
+        "color": 'random-light', // 'random-dark' or 'random-light'
+        "backgroundColor": '#000033', // the color of canvas
+        "rotateRatio": 1 // probability for the word to rotate. 1 means always rotate
+    });
+    var canvas = document.getElementById('canvas');
+    WordCloud(canvas, options);
+
+</script>
+
+</html>
